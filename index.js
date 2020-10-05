@@ -27,6 +27,7 @@ client.connect(err => {
 
     //insert data
     app.post("/addEvent", (req, res) => {
+      console.log(req.body)
       const volunteerItem = req.body;     
       volunteerCollection.insertOne(volunteerItem)
       .then(result => {
@@ -79,10 +80,10 @@ client.connect(err => {
 
     //delete data
     app.delete('/delate/:id', (req, res) => {  
-      console.log(req.params.id)   
+      // console.log(req.params.id)   
       registerCollection.deleteOne({_id: ObjectId(req.params.id)})      
       .then(result => {
-       res.sen(result.deletedCount > 0)
+       res.send(result.deletedCount > 0)
         
       })
     })
@@ -104,4 +105,4 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.listen(port)
+app.listen(process.env.PORT || port)
