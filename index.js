@@ -9,14 +9,11 @@ require('dotenv').config()
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zxfa1.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 
-
 const app = express()
 app.use(bodyParser.json());
 app.use(cors());
 
 const port = 5000
-
-
 
 
 
@@ -27,7 +24,6 @@ client.connect(err => {
 
     //insert data
     app.post("/addEvent", (req, res) => {
-      console.log(req.body)
       const volunteerItem = req.body;     
       volunteerCollection.insertOne(volunteerItem)
       .then(result => {
@@ -45,7 +41,6 @@ client.connect(err => {
 
     //single data load
     app.get('/volunteerTask/:id', (req, res) => {
-        console.log(req.params.id)
       volunteerCollection.find({_id: ObjectId(req.params.id)})      
       .toArray((err, documents) => {
         res.send(documents[0]);
@@ -62,8 +57,7 @@ client.connect(err => {
     })
 
     //single email data load
-    app.get('/volunteerRegister', (req, res) => {  
-       
+    app.get('/volunteerRegister', (req, res) => { 
       registerCollection.find({email: req.query.email})      
       .toArray((err, documents) => {
         res.send(documents);
@@ -79,8 +73,7 @@ client.connect(err => {
     })
 
     //delete data
-    app.delete('/delate/:id', (req, res) => {  
-      console.log(req.params.id)   
+    app.delete('/delate/:id', (req, res) => {   
       registerCollection.deleteOne({_id: ObjectId(req.params.id)})      
       .then(result => {
        res.send(result.deletedCount > 0)
@@ -88,21 +81,17 @@ client.connect(err => {
       })
     })
     app.delete('/adminDelate/:id', (req, res) => {  
-      console.log(req.params.id)   
       registerCollection.deleteOne({_id: ObjectId(req.params.id)})      
       .then(result => {
-        console.log(result)
+        res.send(result)
         
       })
     })
 });
 
 
-
-
-
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('I am Working....')
 })
 
 app.listen(process.env.PORT || port)
