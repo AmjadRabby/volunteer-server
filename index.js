@@ -52,7 +52,7 @@ client.connect(err => {
       })
     })
 
-    //registerCollection
+    //register Collection
     app.post("/addRegister", (req, res) => {
       const registerItem = req.body;     
       registerCollection.insertOne(registerItem)
@@ -63,7 +63,7 @@ client.connect(err => {
 
     //single email data load
     app.get('/volunteerRegister', (req, res) => {  
-      // console.log(req.query.email)   
+       
       registerCollection.find({email: req.query.email})      
       .toArray((err, documents) => {
         res.send(documents);
@@ -80,7 +80,7 @@ client.connect(err => {
 
     //delete data
     app.delete('/delate/:id', (req, res) => {  
-      // console.log(req.params.id)   
+      console.log(req.params.id)   
       registerCollection.deleteOne({_id: ObjectId(req.params.id)})      
       .then(result => {
        res.send(result.deletedCount > 0)
