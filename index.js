@@ -24,16 +24,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
   const volunteerCollection = client.db("volunteerStore").collection("volunteerItem");
   const registerCollection = client.db("volunteerStore").collection("registerInfo");
-    // console.log('db connected')
 
-    app.post("/addVolunteerItem", (req, res) => {
+    //insert data
+    app.post("/addEvent", (req, res) => {
       const volunteerItem = req.body;     
-      volunteerCollection.insertMany(volunteerItem)
+      volunteerCollection.insertOne(volunteerItem)
       .then(result => {
-        res.send(result.insertedCount);
+        res.send(result.insertedCount > 0);
       })
     })
 
+    //all data load
     app.get('/volunteerTasks', (req, res) => {
       volunteerCollection.find({})      
       .toArray((err, documents) => {
@@ -41,6 +42,7 @@ client.connect(err => {
       })
     })
 
+    //single data load
     app.get('/volunteerTask/:id', (req, res) => {
         console.log(req.params.id)
       volunteerCollection.find({_id: ObjectId(req.params.id)})      
@@ -49,7 +51,7 @@ client.connect(err => {
       })
     })
 
-
+    //registerCollection
     app.post("/addRegister", (req, res) => {
       const registerItem = req.body;     
       registerCollection.insertOne(registerItem)
@@ -58,8 +60,9 @@ client.connect(err => {
       })
     })
 
+    //single email data load
     app.get('/volunteerRegister', (req, res) => {  
-      console.log(req.query.email)   
+      // console.log(req.query.email)   
       registerCollection.find({email: req.query.email})      
       .toArray((err, documents) => {
         res.send(documents);
@@ -67,22 +70,31 @@ client.connect(err => {
     })
 
     //Admin
-    app.get('/volunteerRegister', (req, res) => {     
+    app.get('/adminEvent', (req, res) => {     
       registerCollection.find({})      
       .toArray((err, documents) => {
         res.send(documents);
       })
     })
 
+    //delete data
+    app.delete('/delate/:id', (req, res) => {  
+      console.log(req.params.id)   
+      registerCollection.deleteOne({_id: ObjectId(req.params.id)})      
+      .then(result => {
+       res.sen(result.deletedCount > 0)
+        
+      })
+    })
+    app.delete('/adminDelate/:id', (req, res) => {  
+      console.log(req.params.id)   
+      registerCollection.deleteOne({_id: ObjectId(req.params.id)})      
+      .then(result => {
+        console.log(result)
+        
+      })
+    })
 });
-
-
-
-
-
-
-
-
 
 
 
